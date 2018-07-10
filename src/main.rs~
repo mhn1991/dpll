@@ -1,0 +1,10 @@
+mod formula;
+mod dimacs;
+mod solver;
+use std::env;
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    let mut formula = dimacs::reader(&args[1]);
+    let answer = solver::solver(formula);
+    println!("{}",answer);
+}

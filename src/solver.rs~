@@ -1,0 +1,44 @@
+use formula::clause::literal::Literal;
+use formula::clause::Clause;
+use formula::Formula;
+
+
+pub fn solver(mut formula:Formula)-> bool{
+    let mut flag = false;
+    if formula.list.is_empty() {
+       flag = true;
+    }
+
+    for clause in formula.list.iter_mut(){
+    	if clause.list.is_empty(){
+	   //println!("{:?}",&clause);	
+	  return false;
+	}
+	else{
+	  continue;
+	}
+    }
+    println!("{:?}",formula.list.len());
+    match flag {
+     true => return true,
+     false =>{
+     	   let literal = formula.list.get(0).unwrap().list[0];
+    	   if solver(simplify(formula.clone(),literal)){
+		 return true;
+    	   }else {
+    	   	 return solver(simplify(formula,Literal::negate(literal)));
+    	   }
+    }
+}
+}
+
+
+pub fn simplify(mut formula:Formula, literal:Literal)-> Formula{
+    // remove negate of literal from clause
+    for mut clause in formula.list.iter_mut(){
+    	Clause::remove_lit_clause(&mut clause,Literal::negate(literal));
+	}
+    // remove clause that have given literal
+    formula.list.retain(|ref mut clause| !clause.list.contains(&literal));
+    return formula;
+}
