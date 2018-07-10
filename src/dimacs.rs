@@ -14,7 +14,15 @@ pub fn reader(path: &str)-> Formula{
     for line in buffer.lines(){
     	match line {
 	      Ok(l)=> {
-	      	     formula =  Formula::add_clause(formula,chooser(&l));
+	      	     let chars:Vec<&str> = l.split(' ').collect();
+		     for char in chars{
+		             match char.parse::<i32>() {
+			                   Ok(int) =>{
+					   	   formula =  Formula::add_clause(formula,chooser(&l));
+					   },
+						   Err(_) => continue,
+					   }
+					   }
 	      },
 	      _=> println!("can not read file!!"),
 	}
